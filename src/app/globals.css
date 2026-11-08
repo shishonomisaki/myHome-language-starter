@@ -1,0 +1,111 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* 佈景主題：預設是「柔和日間」（不死白）；<html data-theme="…"> 換色調，<html class="dark"> 是夜間（ThemeToggle）。 */
+:root {
+  --background: #f2eee7;
+  --foreground: #292524;
+  --card: #fbf9f5;
+}
+:root[data-theme="sage"] {
+  --background: #e6eee4;
+  --foreground: #1f2a22;
+  --card: #f3f8f1;
+}
+:root[data-theme="sand"] {
+  --background: #f0e4d0;
+  --foreground: #3a2e1f;
+  --card: #faf2e4;
+}
+:root[data-theme="slate"] {
+  --background: #e2e9f0;
+  --foreground: #1e293b;
+  --card: #f0f4f8;
+}
+:root.dark {
+  --background: #0c0a09;
+  --foreground: #f5f5f4;
+  --card: #1c1917;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: system-ui, -apple-system, "Noto Sans TC", "Noto Sans JP", "PingFang TC", "Microsoft JhengHei", sans-serif;
+}
+
+.card {
+  @apply rounded-2xl border border-black/10 p-4 shadow-sm dark:border-white/10;
+  background: var(--card);
+}
+.btn {
+  @apply inline-flex items-center justify-center rounded-xl bg-teal-700 px-4 py-2 font-medium text-white hover:bg-teal-800 disabled:opacity-40;
+}
+.btn-ghost {
+  @apply inline-flex items-center justify-center rounded-xl border border-black/15 px-4 py-2 hover:bg-black/5 dark:border-white/20 dark:hover:bg-white/10;
+}
+
+/* 全部過關的小慶祝：彩紙從上方飄下，約 2 秒後自己消失（Confetti 元件）。 */
+@keyframes confetti-fall {
+  from {
+    transform: translateY(-20px) rotate(0deg);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(100vh) rotate(540deg);
+    opacity: 0;
+  }
+}
+@keyframes pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.6) rotate(-8deg);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.confetti-piece {
+  position: fixed;
+  top: 0;
+  width: 8px;
+  height: 14px;
+  border-radius: 2px;
+  animation: confetti-fall 1.8s ease-in forwards;
+  pointer-events: none;
+}
+.pop {
+  display: inline-block;
+  animation: pop 0.7s ease-out;
+}
+
+/* 頁首的圖示按鈕：一排放得下，不換行。 */
+.nav-icon {
+  display: inline-flex;
+  height: 2.5rem;
+  width: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  font-size: 1.2rem;
+}
+.nav-icon:hover {
+  background: rgb(0 0 0 / 0.06);
+}
+:root.dark .nav-icon:hover {
+  background: rgb(255 255 255 / 0.1);
+}
+
+/* 右下角浮動的朗讀／錄音鈕：電腦寬螢幕時貼著內容欄（max-w-3xl）的右緣，不要飄在視窗最右邊離內容很遠。 */
+.dock-right {
+  right: max(0.75rem, calc((100vw - 48rem) / 2 + 0.75rem));
+}
