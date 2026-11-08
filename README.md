@@ -74,7 +74,7 @@
 - **省網站的 Gemini 額度**：出題不佔網站口說評分用的免費額度。
 
 **原作者的做法**
-1. 在自己電腦裝 NotebookLM 的 MCP 工具（例如 `notebooklm-mcp-cli`，用 `nlm login` 登入 Google），接到 Claude 桌面版或其他 AI 助理。
+1. 在自己電腦裝 NotebookLM 的 MCP 工具 `notebooklm-mcp-cli`（原作者的 repo：https://github.com/jacob-bd/gemini-notebook-mcp-cli ，PyPI：https://pypi.org/project/notebooklm-mcp-cli/ ；安裝方式以該 repo 說明為準，例如 `uv tool install notebooklm-mcp-cli`），用 `nlm login` 登入 Google，再接到 Claude 桌面版或其他 AI 助理。這是第三方非官方工具，跟本專案無關，使用前請自己看過它的說明與風險。
 2. 每個語言開 1–2 本「分級題庫」筆記本（全家共用），每人一本「學習紀錄」筆記本。
 3. 有人做完分級測驗，才產「目前級別 + 下一級」的題目；有人升級才開下一本。
 4. 請 AI 向筆記本要 JSON 格式的題目 → 寫成 SQL 匯入 `item_bank`，`status = 'draft'`。
