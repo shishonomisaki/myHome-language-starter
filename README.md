@@ -43,6 +43,10 @@
 ## 一定要知道的事
 - **Supabase 免費專案閒置約一週會自動暫停**，登入失敗時先到 Supabase 後台按 Restore。
 
+- **Gemini 免費額度**有每分鐘／每日上限，家人多可以多加幾把（不同 Google 帳號）。未滿 18 歲使用的條款請自行評估。
+- 錄音與照片不會存起來，只存評分結果。
+- **範本不附文法／聽力題庫**（是空的）。單字、短文、五十音等內建教材有附。題庫要自己補，方法見下一節。
+
 ## 文件怎麼標可信度
 
 本 repo 的說明（README、AGENTS.md、THIRD_PARTY.md）凡是數字、限制、條款，都盡量標：**來源**（實測／官方文件／推測）＋**信心度**（高／中／低）＋**待確認**。高＝原作者實測或官方文件查證過；中＝官方文件但沒實測，或會變動；低＝推測或建議值。看到「低」請自己再查。
@@ -51,12 +55,12 @@
 
 | 項目 | 免費上限 | 原作者家實際用量 | 來源／信心度 |
 |---|---|---|---|
-| Supabase 資料庫 | 500 MB | 約 15 MB（數個家庭、十多人，用 5 週） | 實測 2026-11-25／高 |
-| Supabase 同時連線 | 直連約 60 | 平常約 12 | 實測／高 |
+| Supabase 資料庫 | 500 MB | 約 15 MB（原作者家用 5 週） | 實測 2026-11-25／高 |
+| Supabase 同時連線 | 直連約 60（最小規格；經 pooler 約 200） | 平常約 12 | 官方文件＋實測／中 |
 | Supabase Realtime 連線 | 200 | **0**（網站沒用 Realtime） | 實測／高 |
-| Supabase 閒置暫停 | 約 7 天沒活動 | `vercel.json` 排程每天讀寫 3 次，已足以避免 | 實測（還沒排程時曾暫停一次）／高 |
+| Supabase 閒置暫停 | 約 7 天沒活動 | `vercel.json` 排程每天讀寫 3 次，目前足以避免 | 一個家庭 5 週的觀察（還沒排程時曾暫停一次）／中 |
 | Supabase 備份 | 免費版沒有自動備份 | — | 官方文件／中 |
-| Vercel 流量／函式 | 100 GB／100 萬次每月 | 估計 < 2 GB／3–5 萬次 | 官方＋估計／中 |
+| Vercel 流量／函式 | 100 GB／100 萬次每月；Hobby 限非商業、每個排程每天最多 1 次（本範本 3 個排程符合） | 估計 < 2 GB／3–5 萬次 | 官方＋估計／中 |
 | Gemini 免費額度 | 每把金鑰有每分鐘／每日上限 | 1–2 把夠一家用 | 實測／中（Google 會調整） |
 
 **建議升級門檻**
@@ -64,12 +68,8 @@
 - 同時連線常態超過 **40**，或存檔常逾時。（中）
 - Gemini 每天用完、評分常退回瀏覽器簡易評分：先多加金鑰，不必付費。（中）
 - 要服務很多家庭、需要備份與不暫停保證：Supabase Pro。（中）
-- 排程被刪或部署壞掉太久仍會休眠；登入失敗先到 Supabase 後台按 Restore。（高）
 
 **待確認**：上限會變動，以 [Supabase 價格](https://supabase.com/pricing)、[Vercel 價格](https://vercel.com/pricing) 當下頁面為準；10 戶以上的負載沒測過。
-- **Gemini 免費額度**有每分鐘／每日上限，家人多可以多加幾把（不同 Google 帳號）。未滿 18 歲使用的條款請自行評估。
-- 錄音與照片不會存起來，只存評分結果。
-- **範本不附文法／聽力題庫**（是空的）。單字、短文、五十音等內建教材有附。題庫要自己補，方法見下一節。
 
 ## 裝置與瀏覽器限制（原作者家實測）
 
@@ -91,8 +91,8 @@
 | 風險 | 說明 | 建議 | 信心度 |
 |---|---|---|---|
 | 單人維護 | 範本由原作者一人業餘維護，沒有客服、沒有更新時程保證。 | 把你 fork 的版本當成自己的；壞了先看 Issues 或請你的 AI 助理照 AGENTS.md 修。 | 高 |
-| 升級要自己做 | 範本更新不會自動到你的網站。 | GitHub 上按 Sync fork → Vercel 自動重新部署；若有新的 `supabase/migrations/*.sql`，要**依編號**到 SQL Editor 執行，否則新功能會出錯。先備份再升級。 | 高 |
-| 資料庫沒自動備份 | 免費版 Supabase 不備份。 | 每月在 Supabase 後台匯出一次，或升 Pro。 | 中 |
+| 升級要自己做 | 範本更新不會自動到你的網站。 | Sync fork 前先記下 `supabase/migrations` 最後一個檔名；在 GitHub 按 Sync fork（Vercel 會自動重新部署）後，只到 SQL Editor 執行比它新的檔，照檔名排序。用 `supabase/install` 安裝的人，安裝時已有的檔不要再跑。先備份再升級。 | 中（備份方法沒實測） |
+| 資料庫沒自動備份 | 免費版 Supabase 不備份。 | 每月備份一次：Supabase 後台 → Table Editor → 每張表右上「…」→ Export to CSV；或在電腦執行 `supabase db dump`（連線字串在 Project Settings → Database）。或升 Pro。 | 中（沒實測） |
 | 安裝檔未簽章 | 範本不提供 App 商店版本；若你自行打包 Android APK，那是自簽、未上架，手機會警告「不明來源」。 | 只從自己 build 的檔安裝，不要裝別人傳的 APK。網頁版不受影響。 | 中 |
 | 外部服務改規則 | Gemini 額度、Supabase／Vercel 免費方案、瀏覽器語音都可能改變。 | 出問題先看「容量與休眠」表與 THIRD_PARTY.md 的待確認項。 | 中 |
 | 金鑰外洩 | 金鑰只該放 Supabase Vault／Vercel 環境變數。 | 永遠不要把 `.env` 推上 GitHub；外洩就到 Google 後台刪掉重建。 | 高 |
@@ -139,5 +139,5 @@ npm test
 - 作者：[shishonomisaki](https://github.com/shishonomisaki)
 - 授權：[PolyForm Noncommercial 1.0.0](LICENSE.md)。可以免費使用、修改、分享給家人朋友，**不能拿來賣或做收費服務**；分享時要附上授權條款與 `Required Notice` 那一行。
 - 照現況提供，沒有保證；你自己的帳號、金鑰、費用與資料由你自己負責。
-- 這是「原始碼公開、非商業授權」，不是 OSI 定義的開源軟體。
+- 這是「原始碼公開、非商業授權」，不是 OSI 定義的開源軟體（見 [PolyForm](https://polyformproject.org/licenses/noncommercial/1.0.0)）。
 - 第三方套件、服務（Gemini、Supabase、Vercel、NotebookLM 工具）與語音的條款：見 [THIRD_PARTY.md](THIRD_PARTY.md)。
